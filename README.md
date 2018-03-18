@@ -55,7 +55,7 @@ func main() {
 
 	// Create a draft post.
 	p, err := m.CreatePost(medium.CreatePostOptions{
-		UserID:        u.ID,
+		UserID:        u.ID, // Or PublicationId: "your publication id"
 		Title:         "Title",
 		Content:       "<h2>Title</h2><p>Content</p>",
 		ContentFormat: medium.ContentFormatHTML,
