@@ -77,6 +77,7 @@ type fileOpener interface {
 // CreatePostOptions defines the options for creating a post on Medium.
 type CreatePostOptions struct {
 	UserID        string        `json:"-"`
+	PublicationId string        `json:"-"`
 	Title         string        `json:"title"`
 	Content       string        `json:"content"`
 	ContentFormat ContentFormat `json:"contentFormat"`
@@ -288,9 +289,15 @@ func (m *Medium) GetPublicationContributors(publicationID string) (*Contributors
 // CreatePost creates a post on the profile identified by the current AccessToken.
 // This requires m.AccessToken to have the PublishPost scope.
 func (m *Medium) CreatePost(o CreatePostOptions) (*Post, error) {
+	var path string
+	if o.PublicationId != "" {
+		path = fmt.Sprintf("/v1/publications/%s/posts", o.PublicationId)
+	} else {
+		path = fmt.Sprintf("/v1/users/%s/posts", o.UserID)
+	}
 	r := clientRequest{
 		method: "POST",
-		path:   fmt.Sprintf("/v1/users/%s/posts", o.UserID),
+		path:   path,
 		data:   o,
 	}
 	p := &Post{}
